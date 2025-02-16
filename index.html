@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart with Promo Code</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff5e1;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+            transition: 0.3s ease;
+        }
+        .container:hover {
+            transform: scale(1.02);
+        }
+        h2 {
+            color: #343a40;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .checkout-section {
+            padding: 15px;
+            border-top: 2px solid #f4a261;
+        }
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #f4a261;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.3s ease;
+        }
+        input:focus {
+            border-color: #e76f51;
+            outline: none;
+        }
+        button {
+            padding: 12px 20px;
+            background: #e76f51;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+        button:hover {
+            background: #d62828;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .success {
+            color: green;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .summary p {
+            font-size: 18px;
+            margin: 8px 0;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Shopping Cart</h2>
+        <div class="checkout-section">
+            <div class="summary">
+                <p><strong>Subtotal:</strong> <span id="subtotal">$100.00</span></p>
+                <p><strong>Discount:</strong> <span id="discount">$0.00</span></p>
+                <p><strong>Total:</strong> <span id="total">$100.00</span></p>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="promo-code" placeholder="Enter promo code">
+                <button id="apply-promo">Apply</button>
+            </div>
+            <p id="promo-message"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let cartTotal = 100;
+            let appliedPromo = null;
+            
+            const subtotalElement = document.getElementById("subtotal");
+            const discountElement = document.getElementById("discount");
+            const totalElement = document.getElementById("total");
+            const promoInput = document.getElementById("promo-code");
+            const applyPromoButton = document.getElementById("apply-promo");
+            const messageElement = document.getElementById("promo-message");
+            
+            function updateTotals() {
+                let discount = 0;
+                if (appliedPromo === "ostad10") {
+                    discount = cartTotal * 0.10;
+                } else if (appliedPromo === "ostad5") {
+                    discount = cartTotal * 0.05;
+                }
+                
+                subtotalElement.textContent = `$${cartTotal.toFixed(2)}`;
+                discountElement.textContent = `$${discount.toFixed(2)}`;
+                totalElement.textContent = `$${(cartTotal - discount).toFixed(2)}`;
+            }
+            
+            applyPromoButton.addEventListener("click", function () {
+                const promoCode = promoInput.value.trim().toLowerCase();
+                
+                if (!promoCode) {
+                    messageElement.textContent = "Please enter a promo code.";
+                    messageElement.className = "error";
+                    return;
+                }
+                
+                if (appliedPromo) {
+                    messageElement.textContent = "A promo code has already been applied.";
+                    messageElement.className = "error";
+                    return;
+                }
+                
+                if (promoCode === "ostad10" || promoCode === "ostad5") {
+                    appliedPromo = promoCode;
+                    messageElement.textContent = "Promo code applied successfully!";
+                    messageElement.className = "success";
+                    updateTotals();
+                } else {
+                    messageElement.textContent = "Invalid promo code. Please try again.";
+                    messageElement.className = "error";
+                }
+            });
+            
+            updateTotals();
+        });
+    </script>
+</body>
+</html>
